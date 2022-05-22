@@ -1,11 +1,28 @@
-import preview from "jest-preview"
-import {render} from "@testing-library/react";
-import {Polls} from "..";
-import {Button} from "@mui/material";
+import {debug} from 'jest-preview';
+import {render, screen, waitFor} from "@testing-library/react";
+import {GET_POLLS_INVENTORY, Polls} from "..";
+import {MockedProvider, MockedResponse} from '@apollo/client/testing';
 
-describe('Polls', () => {
-  it('should work as expected', () => {
-    render(<Button>hello</Button>)
-    preview.debug();
+const pollMock: MockedResponse =
+  {
+    request: {
+      query: GET_POLLS_INVENTORY
+    },
+    result: {
+      data: {
+        poll: [{id: 1, name: "first"}, {id: 2, name: "second"}]
+      }
+    }
+  }
+
+describe("Polls", () => {
+  it("should work as expected", async () => {
+    render(
+      <MockedProvider mocks={[pollMock]} addTypename={false}>
+        <Polls/>
+      </MockedProvider>
+    )
+
+    await waitFor(() => expect(screen.getByText(/first/i)).toBeInTheDocument())
   })
 })
