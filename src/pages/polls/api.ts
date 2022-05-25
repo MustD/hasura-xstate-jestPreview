@@ -5,7 +5,7 @@ export type PollInventory = {
   poll: Poll[]
 }
 
-export const GET_POLLS_INVENTORY = gql`
+export const POLLS_INVENTORY = gql`
   query getPolls {
     poll {
       id, name

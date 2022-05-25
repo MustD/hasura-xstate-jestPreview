@@ -1,12 +1,13 @@
 import {debug} from 'jest-preview';
 import {render, screen, waitFor} from "@testing-library/react";
-import {GET_POLLS_INVENTORY, Polls} from "..";
+import {POLLS_INVENTORY, Polls} from "..";
 import {MockedProvider, MockedResponse} from '@apollo/client/testing';
+import {BrowserRouter} from "react-router-dom";
 
 const pollMock: MockedResponse =
   {
     request: {
-      query: GET_POLLS_INVENTORY
+      query: POLLS_INVENTORY
     },
     result: {
       data: {
@@ -17,11 +18,15 @@ const pollMock: MockedResponse =
 
 describe("Polls", () => {
   it("should work as expected", async () => {
-    render(
-      <MockedProvider mocks={[pollMock]} addTypename={false}>
-        <Polls/>
-      </MockedProvider>
-    )
+    render(<Polls/>, {
+      wrapper: props => (
+        <MockedProvider mocks={[pollMock]} addTypename={true}>
+          <BrowserRouter>
+            {props.children}
+          </BrowserRouter>
+        </MockedProvider>
+      )
+    })
 
     await waitFor(() => expect(screen.getByText(/first/i)).toBeInTheDocument())
   })

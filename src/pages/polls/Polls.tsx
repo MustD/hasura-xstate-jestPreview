@@ -1,20 +1,23 @@
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material"
+import {Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material"
 import {useQuery} from "@apollo/client";
-import {GET_POLLS_INVENTORY, PollInventory} from ".";
+import {POLLS_INVENTORY, PollInventory} from ".";
+import {useNavigate} from "react-router-dom";
 
 export const Polls = () => {
-  const {loading, data} = useQuery<PollInventory>(GET_POLLS_INVENTORY)
+  const {loading, data} = useQuery<PollInventory>(POLLS_INVENTORY)
+  const navigate = useNavigate()
 
   if(loading){
     return <div>loading</div>
   }
   return (
-    <TableContainer component={Paper}>
+    <TableContainer>
       <Table sx={{ minWidth: 650 }}>
         <TableHead>
           <TableRow>
             <TableCell align="right">id</TableCell>
             <TableCell align="right">name</TableCell>
+            <TableCell align="right">actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -25,8 +28,16 @@ export const Polls = () => {
             >
               <TableCell align="right">{data.id}</TableCell>
               <TableCell align="right">{data.name}</TableCell>
+              <TableCell align="right"><Button onClick={() => navigate(`edit/${data.id}`)}>edit</Button></TableCell>
             </TableRow>
           ))}
+          <TableRow
+            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+          >
+            <TableCell align="right"></TableCell>
+            <TableCell align="right"></TableCell>
+            <TableCell align="right"><Button onClick={() => navigate(`edit/new`)}>new</Button></TableCell>
+          </TableRow>
         </TableBody>
       </Table>
     </TableContainer>
